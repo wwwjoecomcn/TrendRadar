@@ -205,18 +205,16 @@ presets:
   # ───────────────────────────────────────────────────────────
   # 3️⃣ office_hours - 办公时间推送
   #
-  # 工作日三段式推送，周末增量自由推。
-  # 适合：上班族、企业用户
+  # 工作日午间单次推送，周末不推送。
+  # 适合：只需每日午间提醒的用户
   #
   # 默认（静默期）：推送 ✗ | AI分析 ✗
-  # 到岗速览：推送 ✓ | AI分析 ✓ | 只推一次
   # 午间热点：推送 ✓ | AI分析 ✗ | 只推一次
-  # 收工汇总：推送 ✓ | AI分析 ✓ | 只推一次
-  # 周末自由：推送 ✓ | AI分析 ✗ | 不限推送次数
+  # 周末：不推送
   # ───────────────────────────────────────────────────────────
   office_hours:
     name: "办公时间"
-    description: "工作日三段式推送（到岗→午间→收工），周末增量自由推送。"
+    description: "工作日午间推送（12:00-13:00），周末不推送。"
 
     default:
       collect: true
@@ -241,8 +239,8 @@ presets:
 
       noon_update:
         name: "午间热点"
-        start: "13:00"
-        end: "15:00"              
+        start: "12:00"
+        end: "13:00"
         push: true                 # 午间推送当前在榜热点
         report_mode: "current"     # 当前在榜的新闻
         # analyze 继承 default: false → 午间不做 AI 分析，节省 API
@@ -269,12 +267,12 @@ presets:
           analyze: false           # 不限制分析次数
           push: false              # 不限制推送次数
 
-    # 工作日使用三段式推送；周末使用增量自由模式
+    # 工作日仅午间推送；周末不推送
     day_plans:
       workday:
-        periods: ["morning_briefing", "noon_update", "closing_summary"]
+        periods: ["noon_update"]   # 仅保留午间推送
       weekend:
-        periods: ["weekend_free"]  # 周末：有新增就推，不打扰睡眠
+        periods: []                # 周末不推送
 
     week_map:
       1: "workday"                 # 周一 → 工作日计划
