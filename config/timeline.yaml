@@ -205,16 +205,17 @@ presets:
   # ───────────────────────────────────────────────────────────
   # 3️⃣ office_hours - 办公时间推送
   #
-  # 工作日午间单次推送，周末不推送。
-  # 适合：只需每日午间提醒的用户
+  # 每天早晚各推送一次（含周末）。
+  # 适合：早晚固定节奏关注热点的用户
   #
   # 默认（静默期）：推送 ✗ | AI分析 ✗
-  # 午间热点：推送 ✓ | AI分析 ✗ | 只推一次
-  # 周末：不推送
+  # 早间热点：推送 ✓ | AI分析 ✗ | 只推一次
+  # 晚间热点：推送 ✓ | AI分析 ✗ | 只推一次
+  # 周末：同样早晚各推送一次
   # ───────────────────────────────────────────────────────────
   office_hours:
     name: "办公时间"
-    description: "工作日午间推送（12:00-13:00），周末不推送。"
+    description: "每天早晚推送（08:00-09:00、21:00-22:00）。"
 
     default:
       collect: true
@@ -237,13 +238,22 @@ presets:
         report_mode: "current"     # 当前在榜的新闻
         # once 继承 default（analyze: true, push: true）→ 只推/分析一次
 
-      noon_update:
-        name: "午间热点"
-        start: "12:00"
-        end: "13:00"
-        push: true                 # 午间推送当前在榜热点
+      morning_update:
+        name: "早间热点"
+        start: "08:00"
+        end: "09:00"
+        push: true                 # 早间推送当前在榜热点
         report_mode: "current"     # 当前在榜的新闻
-        # analyze 继承 default: false → 午间不做 AI 分析，节省 API
+        # analyze 继承 default: false → 早间不做 AI 分析，节省 API
+        # once 继承 default（push: true）→ 只推一次
+
+      evening_update:
+        name: "晚间热点"
+        start: "21:00"
+        end: "22:00"
+        push: true                 # 晚间推送当前在榜热点
+        report_mode: "current"     # 当前在榜的新闻
+        # analyze 继承 default: false → 晚间不做 AI 分析，节省 API
         # once 继承 default（push: true）→ 只推一次
 
       closing_summary:
@@ -267,12 +277,12 @@ presets:
           analyze: false           # 不限制分析次数
           push: false              # 不限制推送次数
 
-    # 工作日仅午间推送；周末不推送
+    # 每天早晚各推送一次
     day_plans:
       workday:
-        periods: ["noon_update"]   # 仅保留午间推送
+        periods: ["morning_update", "evening_update"]
       weekend:
-        periods: []                # 周末不推送
+        periods: ["morning_update", "evening_update"]
 
     week_map:
       1: "workday"                 # 周一 → 工作日计划
